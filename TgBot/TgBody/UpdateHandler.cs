@@ -8,10 +8,12 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.ReplyMarkups;
+using tgBotOrderV11.TgBot.TgLogic.MachineState;
+using tgBotOrderV11.TgBot.TgLogic.MachineState.Start;
 
 namespace tgBotOrderV11.TgBot.Body;
 
-public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger) : IUpdateHandler
+public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger, StateController controller) : IUpdateHandler
 {
     private static readonly InputPollOption[] PollOptions = ["Hello", "World!"];
 
@@ -48,6 +50,10 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
         if (msg.Text is not { } messageText)
             return;
 
+        controller.CurrentState = new AuthState();
+
+        controller.CurrentState.MessHandler(controller, msg, bot);
+
         Message sentMessage = await (messageText.Split(' ')[0] switch
         {
             "/photo" => SendPhoto(msg),
@@ -79,11 +85,10 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
 
     async Task<Message> SendStart(Message msg)
     {
-    
-        
-
-
         string usage = $"hello message {msg.Chat.FirstName}";
+
+
+
         return await bot.SendMessage(msg.Chat, usage, parseMode: ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
     }
 

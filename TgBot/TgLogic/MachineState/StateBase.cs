@@ -1,14 +1,16 @@
-namespace tgBotOrder_v11.MachineState;
+using Microsoft.VisualBasic;
+using Telegram.Bot;
+using Telegram.Bot.Types;
+using tgBotOrder_v11.Resositories.Abstract;
+
+namespace tgBotOrderV11.TgBot.TgLogic.MachineState;
 
 
 public interface IState
 {
-
-    public void Entry(IState prev);
-    public void Handler();
-    public void Exit(IState nextState);
-    public void Reset(IState startState);
-
-
+    public Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot);
+    public Task InlineHandler(StateController stateController, InlineQuery inlineQuery);
+    public Task Exit(StateController stateController, Message msg, ITelegramBotClient bot, IState nextState);
+    public Task Reset(StateController stateController, Message msg, ITelegramBotClient bot, IState startState);
 }
 

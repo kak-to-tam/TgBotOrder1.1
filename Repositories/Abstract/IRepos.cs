@@ -1,6 +1,6 @@
 namespace tgBotOrder_v11.Resositories.Abstract;
 
-interface IRepos<T> where T : Abstract.IModel
+public interface IRepos<T> where T : Abstract.IModel
 {
     public Task<T?> Add(T model);
     public Task<T?> Update(T model);

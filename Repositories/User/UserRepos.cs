@@ -7,7 +7,7 @@ using tgBotOrder_v11.Resositories.Abstract;
 
 namespace tgBotOrder_v11.Resositories.Repos;
 
-class UserRepos : IRepos<UserModel>
+public class UserRepos : IRepos<UserModel>
 {
     private TgBotOrderContext tgBotOrderContext;
     public UserRepos(TgBotOrderContext tgBotOrderContext)
