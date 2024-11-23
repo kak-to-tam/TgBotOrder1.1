@@ -14,7 +14,7 @@ public class AuthState : IState
     {
         
     }
-    public async Task InlineHandler(StateController stateController, InlineQuery inlineQuery)
+    public async Task InlineHandler(StateController stateController, InlineQuery inlineQuery,  ITelegramBotClient bot)
     {
 
     }

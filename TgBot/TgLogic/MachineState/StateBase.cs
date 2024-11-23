@@ -9,7 +9,7 @@ namespace tgBotOrderV11.TgBot.TgLogic.MachineState;
 public interface IState
 {
     public Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot);
-    public Task InlineHandler(StateController stateController, InlineQuery inlineQuery);
+    public Task InlineHandler(StateController stateController, InlineQuery inlineQuery, ITelegramBotClient bot);
     public Task Exit(StateController stateController, Message msg, ITelegramBotClient bot, IState nextState);
     public Task Reset(StateController stateController, Message msg, ITelegramBotClient bot, IState startState);
 }
