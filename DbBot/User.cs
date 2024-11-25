@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace tgBotOrder_v11.DbBot;
+namespace tgBotOrderV11.DbBot;
 
 public partial class User
 {

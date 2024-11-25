@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.ComponentModel.DataAnnotations;
-using tgBotOrder_v11.DbBot;
-using tgBotOrder_v11.Resositories.Abstract;
+using tgBotOrderV11.DbBot;
+using tgBotOrderV11.Repos.Abstract;
 
 
-namespace tgBotOrder_v11.Resositories.Model;
+namespace tgBotOrderV11.Repos.Model;
 
 public class ReferalModel : Abstract.IModel
 {

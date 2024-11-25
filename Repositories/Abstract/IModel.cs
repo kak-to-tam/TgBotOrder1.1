@@ -1,5 +1,5 @@
 
-namespace tgBotOrder_v11.Resositories.Abstract;
+namespace tgBotOrderV11.Repos.Abstract;
 
 
 public interface IModel

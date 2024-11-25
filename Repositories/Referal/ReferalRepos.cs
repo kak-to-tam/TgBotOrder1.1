@@ -1,10 +1,10 @@
 
-using tgBotOrder_v11.DbBot;
-using tgBotOrder_v11.Resositories;
-using tgBotOrder_v11.Resositories.Model;
-using tgBotOrder_v11.Resositories.Abstract;
+using tgBotOrderV11.DbBot;
+using tgBotOrderV11.Repos;
+using tgBotOrderV11.Repos.Model;
+using tgBotOrderV11.Repos.Abstract;
 
-namespace tgBotOrder_v11.Resositories.Repos;
+namespace tgBotOrderV11.Repos;
 
 public class ReferalRepos : IRepos<ReferalModel>
 {

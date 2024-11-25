@@ -1,8 +1,8 @@
 
-using tgBotOrder_v11.DbBot;
-using tgBotOrder_v11.Resositories.Repos;
+using tgBotOrderV11.DbBot;
+using tgBotOrderV11.Repos;
 
-namespace tgBotOrder_v11.Resositories;
+namespace tgBotOrderV11.Resos;
 
 public class Resositories
 {

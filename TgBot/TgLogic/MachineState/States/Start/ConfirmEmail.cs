@@ -1,7 +1,6 @@
 using tgBotOrderV11.TgBot.TgLogic.MachineState;
-using tgBotOrder_v11.Resositories.Model;
-using tgBotOrder_v11.Resositories.Abstract;
-using tgBotOrderV11.TgBot.TgLogic.MachineState;
+using tgBotOrderV11.Repos.Model;
+using tgBotOrderV11.Repos.Abstract;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 using Microsoft.Extensions.Caching.Memory;
@@ -9,6 +8,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using tgBotOrderV11.Utils;
 using tgBotOrderV11.TgBot.TgLogic.MachineState.User;
+using tgBotOrderV11.Repos;
 
 
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState.Start;
@@ -23,12 +23,12 @@ public class ConfirmEmail : IState
 
         if (msg.Text == code)
         {
-            stateController.MemoryCache.Remove($"um:{msg.Chat.Id}");
             stateController.MemoryCache.TryGetValue($"um:{msg.Chat.Id}", out UserModel userModel);
-            stateController.Repos.UserRepos.Add(userModel);
+            stateController.MemoryCache.Remove($"um:{msg.Chat.Id}");
+            await stateController.Repos.UserRepos.Add(userModel);
             stateController.MemoryCache.Remove($"code:{msg.Chat.Id}");
             await stateController.SetNewState(new UserMenuState(), msg.Chat.Id);
-            stateController.CurrentState.Entry(stateController, msg, bot);
+            await stateController.CurrentState.Entry(stateController, msg, bot);
         }
         else
         {

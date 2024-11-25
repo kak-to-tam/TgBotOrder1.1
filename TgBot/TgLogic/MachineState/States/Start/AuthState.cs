@@ -1,13 +1,13 @@
 using tgBotOrderV11.TgBot.TgLogic.MachineState;
-using tgBotOrder_v11.Resositories.Model;
-using tgBotOrder_v11.Resositories.Abstract;
-using tgBotOrderV11.TgBot.TgLogic.MachineState;
+using tgBotOrderV11.Repos.Model;
+using tgBotOrderV11.Repos.Abstract;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 using Microsoft.Extensions.Caching.Memory;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using tgBotOrderV11.TgBot.TgLogic.MachineState.User;
+using tgBotOrderV11.Repos;
 
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState.Start;
 

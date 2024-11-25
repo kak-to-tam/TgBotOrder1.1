@@ -59,7 +59,7 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
         }
         else 
         {
-            controller.MemoryCache.TryGetValue(msg.Chat.Id, out IState? lastState);
+            controller.MemoryCache.TryGetValue($"st:{msg.Chat.Id}", out IState? lastState);
             if (lastState != null)
             {
                 controller.SetNewState(lastState, msg.Chat.Id);
@@ -121,7 +121,7 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
     // Process Inline Keyboard callback data
     private async Task OnCallbackQuery(CallbackQuery callbackQuery)
     {
-        controller.MemoryCache.TryGetValue(callbackQuery.Message!.Chat.Id, out IState? lastState);
+        controller.MemoryCache.TryGetValue($"st:{callbackQuery.Message!.Chat.Id}", out IState? lastState);
         if (lastState != null)
         {
             controller.CurrentState.InlineHandler(controller, callbackQuery, bot);

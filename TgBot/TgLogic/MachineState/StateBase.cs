@@ -1,7 +1,7 @@
 using Microsoft.VisualBasic;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using tgBotOrder_v11.Resositories.Abstract;
+using tgBotOrderV11.Repos.Abstract;
 
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState;
 

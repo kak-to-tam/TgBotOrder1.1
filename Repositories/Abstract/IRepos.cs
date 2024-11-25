@@ -1,4 +1,4 @@
-namespace tgBotOrder_v11.Resositories.Abstract;
+namespace tgBotOrderV11.Repos.Abstract;
 
 public interface IRepos<T> where T : Abstract.IModel
 {

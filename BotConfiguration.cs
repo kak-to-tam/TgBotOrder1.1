@@ -1,4 +1,4 @@
-namespace tgBotOrderV11.Utils;
+namespace tgBotOrderV11;
 
 public class BotConfiguration
 {

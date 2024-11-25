@@ -1,11 +1,11 @@
-using tgBotOrder_v11.Resositories.Model;
-using tgBotOrder_v11.DbBot;
+using tgBotOrderV11.Repos;
+using tgBotOrderV11.DbBot;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using tgBotOrder_v11.Resositories.Abstract;
+using tgBotOrderV11.Repos.Abstract;
 
-namespace tgBotOrder_v11.Resositories.Repos;
+namespace tgBotOrderV11.Repos;
 
 public class UserRepos : IRepos<UserModel>
 {

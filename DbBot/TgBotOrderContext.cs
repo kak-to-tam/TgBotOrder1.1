@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+using tgBotOrder_v1._1.DbBot;
 
-namespace tgBotOrder_v11.DbBot;
+namespace tgBotOrderV11.DbBot;
 
 public partial class TgBotOrderContext : DbContext
 {
