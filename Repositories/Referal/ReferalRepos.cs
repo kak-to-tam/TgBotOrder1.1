@@ -13,7 +13,7 @@ public class ReferalRepos : IRepos<ReferalModel>
     {
         this.tgBotOrderContext = tgBotOrderContext;
     }
-    public async Task<ReferalModel?> CreateModel(int tgID, int? father1_id = null, int? father2_id = null, int? father3_id = null)
+    public async Task<ReferalModel?> CreateModel(long tgID, long? father1_id = null, long? father2_id = null, long? father3_id = null)
     {
         ReferalModel referalModel = new ReferalModel(tgID, father1_id, father2_id, father3_id);
         return referalModel;
@@ -23,7 +23,7 @@ public class ReferalRepos : IRepos<ReferalModel>
         List<ReferalModel> referalModels = new List<ReferalModel>();
         return referalModels;
     }
-    public async Task<ReferalModel?> GetModel(int tgID)
+    public async Task<ReferalModel?> GetModel(long tgID)
     {
         ReferalModel referalModel = new ReferalModel(tgID);
         return referalModel;

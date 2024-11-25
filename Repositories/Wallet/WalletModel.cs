@@ -9,13 +9,13 @@ namespace tgBotOrder_v11.Resositories.Model;
 public class WalletModel : Abstract.IModel
 {
     [Required]
-    public int TgID { get; private set; }
+    public long TgID { get; private set; }
     [Required]
     public string Address { get; private set; }
     [Required]
     public float Balance { get; private set; }
     
-    public WalletModel(int tgID, string address, float balance)
+    public WalletModel(long tgID, string address, float balance)
     {
         TgID = tgID;
         Address = address;

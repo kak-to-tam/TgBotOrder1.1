@@ -11,9 +11,5 @@ public partial class Wallet
 
     public float Balance { get; set; }
 
-    public int UserId { get; set; }
-
-    public virtual User? User { get; set; }
-
-    public virtual User UserNavigation { get; set; } = null!;
+    public long UserId { get; set; }
 }

@@ -13,7 +13,7 @@ public class BlacklistRepos : IRepos<BlacklistModel>
     {
         this.tgBotOrderContext = tgBotOrderContext;
     }
-    public async Task<BlacklistModel?> CreateModel(int tgID)
+    public async Task<BlacklistModel?> CreateModel(long tgID)
     {
         BlacklistModel blacklistModels = new BlacklistModel(tgID);
         return blacklistModels;
@@ -23,7 +23,7 @@ public class BlacklistRepos : IRepos<BlacklistModel>
         List<BlacklistModel> blacklistModel = new List<BlacklistModel>();
         return blacklistModel;
     }
-    public async Task<BlacklistModel?> GetModel(int tgID)
+    public async Task<BlacklistModel?> GetModel(long tgID)
     {
         BlacklistModel blacklistModel = new BlacklistModel(tgID);
         return blacklistModel;

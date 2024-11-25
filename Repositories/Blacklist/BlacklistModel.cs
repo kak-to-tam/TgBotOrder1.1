@@ -9,9 +9,9 @@ namespace tgBotOrder_v11.Resositories.Model;
 public class BlacklistModel : Abstract.IModel
 {
     [Required]
-    public int TgID { get; private set; }
+    public long TgID { get; private set; }
     
-    public BlacklistModel(int tgID)
+    public BlacklistModel(long tgID)
     {
         TgID = tgID;
         

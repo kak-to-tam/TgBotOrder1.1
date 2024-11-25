@@ -53,7 +53,7 @@ public class UserRepos : IRepos<UserModel>
         return null;
     }
 
-    public async Task<UserModel?> GetModel(int tgID)
+    public async Task<UserModel?> GetModel(long tgID)
     {
         try
         {
@@ -85,7 +85,7 @@ public class UserRepos : IRepos<UserModel>
 
         return null;
     }
-    public async Task<UserModel?> CreateUserModel(int tgID, string email)
+    public async Task<UserModel?> CreateUserModel(long tgID, string email)
     {
         try
         {
@@ -119,6 +119,7 @@ public class UserRepos : IRepos<UserModel>
         try
         {
             User user = new User();
+            
             user.TgId = userModel.TgID;
             user.Email = userModel.Email;
 

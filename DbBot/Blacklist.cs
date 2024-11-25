@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace tgBotOrder_v11.DbBot;
+namespace tgBotOrder_v1._1.DbBot;
 
 public partial class Blacklist
 {
     public int Id { get; set; }
 
-    public int UserId { get; set; }
-
-    public virtual User User { get; set; } = null!;
+    public long UserId { get; set; }
 }

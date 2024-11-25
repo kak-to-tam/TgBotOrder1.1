@@ -1,34 +1,26 @@
-using tgBotOrderV11.TgBot.TgLogic.MachineState;
+using tgBotOrderV11.TgBot.TgLogic.MachineState.Start;
 using tgBotOrder_v11.Resositories.Model;
 using tgBotOrder_v11.Resositories.Abstract;
-using tgBotOrderV11.TgBot.TgLogic.MachineState;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 using Microsoft.Extensions.Caching.Memory;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using tgBotOrderV11.Utils;
-using tgBotOrderV11.TgBot.TgLogic.MachineState.User;
 
 
-namespace tgBotOrderV11.TgBot.TgLogic.MachineState.Start;
+namespace tgBotOrderV11.TgBot.TgLogic.MachineState.User;
 
-public class ConfirmEmail : IState
+public class UserMenuState : IState
 {
     
     public async Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot)
     {
-
-        stateController.MemoryCache.TryGetValue($"code:{msg.Chat.Id}", out string? code);
+        stateController.MemoryCache.TryGetValue(msg.Chat.Id, out string? code);
 
         if (msg.Text == code)
         {
-            stateController.MemoryCache.Remove($"um:{msg.Chat.Id}");
-            stateController.MemoryCache.TryGetValue($"um:{msg.Chat.Id}", out UserModel userModel);
-            stateController.Repos.UserRepos.Add(userModel);
-            stateController.MemoryCache.Remove($"code:{msg.Chat.Id}");
-            await stateController.SetNewState(new UserMenuState(), msg.Chat.Id);
-            stateController.CurrentState.Entry(stateController, msg, bot);
+            await bot.SendMessage(msg.Chat, $"code is correct", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
         }
         else
         {
@@ -44,13 +36,12 @@ public class ConfirmEmail : IState
         switch(callbackQuery.Data)
         {
             case "nEmail":
-                stateController.MemoryCache.Remove($"um:{callbackQuery.Message!.Chat.Id}");
                 stateController.SetNewState(new EmailState(), callbackQuery.Message!.Chat.Id);
                 await bot.SendMessage(callbackQuery.Message!.Chat, $"Write new email", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
                 break;
             case "nCode":
-                stateController.MemoryCache.Remove($"code:{callbackQuery.Message!.Chat.Id}");
                 string code = await CodeConfirm.GenerateCode();
+                stateController.MemoryCache.Remove($"code:{callbackQuery.Message!.Chat.Id}");
                 stateController.MemoryCache.Set(callbackQuery.Message!.Chat.Id, code);
                 await bot.SendMessage(callbackQuery.Message!.Chat, $"We send new code on u email", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
                 break;
@@ -66,6 +57,6 @@ public class ConfirmEmail : IState
     }
     public async Task Entry(StateController stateController, Message msg, ITelegramBotClient bot)
     {
-
+        await bot.SendMessage(msg.Chat, $"hello from user menu", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
     }
 }

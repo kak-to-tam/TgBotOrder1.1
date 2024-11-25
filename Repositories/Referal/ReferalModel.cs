@@ -9,13 +9,13 @@ namespace tgBotOrder_v11.Resositories.Model;
 public class ReferalModel : Abstract.IModel
 {
     [Required]
-    public int TgID { get; private set; }
+    public long TgID { get; private set; }
 
-    public int? Father1Id { get; private set; }
-    public int? Father2Id { get; private set; }
-    public int? Father3Id { get; private set; }
+    public long? Father1Id { get; private set; }
+    public long? Father2Id { get; private set; }
+    public long? Father3Id { get; private set; }
     
-    public ReferalModel(int tgID, int? father1Id = null, int? father2Id = null, int? father3Id = null)
+    public ReferalModel(long tgID, long? father1Id = null, long? father2Id = null, long? father3Id = null)
     {
         TgID = tgID;
         Father1Id = father1Id;

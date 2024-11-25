@@ -12,10 +12,15 @@ public class StateController
 {
     public IMemoryCache MemoryCache{ get; private set; }
     public Resositories Repos{ get; private set; }
-    public IState CurrentState;
+    public IState CurrentState { get; private set; }
     public StateController( IMemoryCache cache, Resositories resositories )
     {
         MemoryCache = cache;
         Repos = resositories;
+    }
+    public async Task SetNewState(IState newState, long tgID)
+    {
+        CurrentState = newState;
+        MemoryCache.Set(tgID, CurrentState);
     }
 }

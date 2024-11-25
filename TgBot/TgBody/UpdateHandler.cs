@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -47,41 +48,32 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
     private async Task OnMessage(Message msg)
     {
         logger.LogInformation("Receive message type: {MessageType}", msg.Type);
-        if (msg.Text is not { } messageText)
+        if (msg.Text == "")
             return;
 
-        controller.CurrentState = new AuthState();
-
-        controller.CurrentState.MessHandler(controller, msg, bot);
-
-        Message sentMessage = await (messageText.Split(' ')[0] switch
+        if (msg.Text == "/start")
         {
-            "/photo" => SendPhoto(msg),
-            "/inline_buttons" => SendInlineKeyboard(msg),
-            "/poll" => SendPoll(msg),
-            "/poll_anonymous" => SendAnonymousPoll(msg),
-            "/throw" => FailingHandler(msg),
-            _ => Usage(msg)
-        });
-        logger.LogInformation("The message was sent with id: {SentMessageId}", sentMessage.Id);
+            controller.SetNewState(new AuthState(), msg.Chat.Id);
+        
+            controller.CurrentState.MessHandler(controller, msg, bot);
+        }
+        else 
+        {
+            controller.MemoryCache.TryGetValue(msg.Chat.Id, out IState? lastState);
+            if (lastState != null)
+            {
+                controller.SetNewState(lastState, msg.Chat.Id);
+                controller.CurrentState.MessHandler(controller, msg, bot);
+            }
+            else
+            {
+                //TODO: Add err state
+            }
+        }
+        
     }
 
-    async Task<Message> Usage(Message msg)
-    {
-        const string usage = """
-                <b><u>Bot menu</u></b>:
-                /photo          - send a photo
-                /inline_buttons - send inline buttons
-                /keyboard       - send keyboard buttons
-                /remove         - remove keyboard buttons
-                /request        - request location or contact
-                /inline_mode    - send inline-mode results list
-                /poll           - send a poll
-                /poll_anonymous - send an anonymous poll
-                /throw          - what happens if handler fails
-            """;
-        return await bot.SendMessage(msg.Chat, usage, parseMode: ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
-    }
+    
 
     async Task<Message> SendStart(Message msg)
     {
@@ -129,9 +121,15 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
     // Process Inline Keyboard callback data
     private async Task OnCallbackQuery(CallbackQuery callbackQuery)
     {
-        logger.LogInformation("Received inline keyboard callback from: {CallbackQueryId}", callbackQuery.Id);
-        await bot.AnswerCallbackQuery(callbackQuery.Id, $"Received {callbackQuery.Data}");
-        await bot.SendMessage(callbackQuery.Message!.Chat, $"Received {callbackQuery.Data}");
+        controller.MemoryCache.TryGetValue(callbackQuery.Message!.Chat.Id, out IState? lastState);
+        if (lastState != null)
+        {
+            controller.CurrentState.InlineHandler(controller, callbackQuery, bot);
+        }
+        else
+        {
+            //TODO: err for callback
+        }
     }
 
     #region Inline Mode

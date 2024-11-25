@@ -44,11 +44,6 @@ public partial class TgBotOrderContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Blacklists)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_blacklist_user");
         });
 
         modelBuilder.Entity<Referal>(entity =>
@@ -57,11 +52,11 @@ public partial class TgBotOrderContext : DbContext
 
             entity.ToTable("referal");
 
-            entity.HasIndex(e => e.Father1Id, "FK__user");
+            entity.HasIndex(e => e.Father1Id, "FK_referal_user");
 
-            entity.HasIndex(e => e.Father2Id, "FK__user_2");
+            entity.HasIndex(e => e.Father2Id, "FK_referal_user_2");
 
-            entity.HasIndex(e => e.Father3Id, "FK__user_3");
+            entity.HasIndex(e => e.Father3Id, "FK_referal_user_3");
 
             entity.HasIndex(e => e.UserId, "user_id").IsUnique();
 
@@ -72,23 +67,6 @@ public partial class TgBotOrderContext : DbContext
             entity.Property(e => e.Father2Id).HasColumnName("father2_id");
             entity.Property(e => e.Father3Id).HasColumnName("father3_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
-
-            entity.HasOne(d => d.Father1).WithMany(p => p.ReferalFather1s)
-                .HasForeignKey(d => d.Father1Id)
-                .HasConstraintName("FK__user");
-
-            entity.HasOne(d => d.Father2).WithMany(p => p.ReferalFather2s)
-                .HasForeignKey(d => d.Father2Id)
-                .HasConstraintName("FK__user_2");
-
-            entity.HasOne(d => d.Father3).WithMany(p => p.ReferalFather3s)
-                .HasForeignKey(d => d.Father3Id)
-                .HasConstraintName("FK__user_3");
-
-            entity.HasOne(d => d.User).WithOne(p => p.ReferalUser)
-                .HasForeignKey<Referal>(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__user_5");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -99,18 +77,13 @@ public partial class TgBotOrderContext : DbContext
 
             entity.HasIndex(e => e.Email, "email").IsUnique();
 
-            entity.HasIndex(e => e.WalletId, "wallet_id").IsUnique();
+            entity.HasIndex(e => e.TgId, "tg_id");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Email)
                 .HasMaxLength(150)
                 .HasColumnName("email");
             entity.Property(e => e.TgId).HasColumnName("tg_id");
-            entity.Property(e => e.WalletId).HasColumnName("wallet_id");
-
-            entity.HasOne(d => d.Wallet).WithOne(p => p.User)
-                .HasForeignKey<User>(d => d.WalletId)
-                .HasConstraintName("FK_user_wallet");
         });
 
         modelBuilder.Entity<Wallet>(entity =>
@@ -130,11 +103,6 @@ public partial class TgBotOrderContext : DbContext
                 .HasColumnName("adress");
             entity.Property(e => e.Balance).HasColumnName("balance");
             entity.Property(e => e.UserId).HasColumnName("user_id");
-
-            entity.HasOne(d => d.UserNavigation).WithMany(p => p.Wallets)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_wallet_user");
         });
 
         OnModelCreatingPartial(modelBuilder);

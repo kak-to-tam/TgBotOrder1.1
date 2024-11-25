@@ -11,8 +11,8 @@ public class UserModel : Abstract.IModel
     [RegularExpression(@"([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)")]
     public string Email { get; private set; }
     [Required]
-    public int TgID { get; private set; }
-    public UserModel(int tgID, string email)
+    public long TgID { get; private set; }
+    public UserModel(long tgID, string email)
     {
         TgID = tgID;
         Email = email;
