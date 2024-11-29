@@ -23,11 +23,9 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddHttpClient("telegram_bot_client").RemoveAllLoggers()
                 .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
                 {
-                    //BotConfiguration? botConfiguration = sp.GetService<IOptions<BotConfiguration>>()?.Value;
-                    //ArgumentNullException.ThrowIfNull(botConfiguration);
-                    //TelegramBotClientOptions options = new(botConfiguration.BotToken);
-
-                    TelegramBotClientOptions options = new("7677437848:AAG4Fcow3ZxPoDLNmmEnjusYenfGic8jfjo");
+                    BotConfiguration? botConfiguration = sp.GetService<IOptions<BotConfiguration>>()?.Value;
+                    ArgumentNullException.ThrowIfNull(botConfiguration);
+                    TelegramBotClientOptions options = new(botConfiguration.BotToken)
 
                     return new TelegramBotClient(options, httpClient);
                 });
