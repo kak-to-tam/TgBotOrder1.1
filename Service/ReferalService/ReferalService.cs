@@ -6,13 +6,13 @@ using tgBotOrderV11.Repos.Model;
 using tgBotOrderV11.Resos;
 using tgBotOrderV11.TgBot.TgLogic.MachineState;
 
-namespace tgBotOrderV11.TgBot.TgLogic.Systems.Referal;
+namespace tgBotOrderV11.TgBot.TgLogic.Service.Referal;
 
 
 public class ReferalService
 {
-    public IMemoryCache MemoryCache{ get; private set; }
-    public Resositories Repos { get; private set; }
+    private IMemoryCache MemoryCache{ get; init; }
+    private Resositories Repos { get; init; }
     public ReferalService(MemoryCache memoryCache, Resositories repos) 
     {
         MemoryCache = memoryCache;
@@ -24,8 +24,54 @@ public class ReferalService
         byte[] data = Convert.FromBase64String(refLink);
         long refID = long.Parse(System.Text.Encoding.UTF8.GetString(data));
 
-        ReferalModel reposModel = await Repos.ReferalRepos.GetModel(refID);
+        ReferalModel fatherModel = await Repos.ReferalRepos.GetModel(tgID);
 
+        ReferalModel reposModel = await Repos.ReferalRepos.CreateModel(tgID, refID, fatherModel.Father1Id, fatherModel.Father2Id);
+
+        await Repos.ReferalRepos.Add(reposModel);
+    }
+
+    public async Task AddRefBonus(long tgID, float amout, float percent = (float)0.1)
+    {
+        ReferalModel fatherModel = await Repos.ReferalRepos.GetModel(tgID);
+        if (percent == (float)0.01)
+        {
+            WalletModel walletModel = await Repos.WalletRepos.GetModel(fatherModel.Father1Id.Value);
+
+            walletModel.Balance += (float)(amout*percent); 
+
+            await Repos.WalletRepos.Update(walletModel);
+            return;
+        }
+        if (fatherModel.Father1Id != 0 && percent != 0)
+        {
+            WalletModel walletModel = await Repos.WalletRepos.GetModel(fatherModel.Father1Id.Value);
+
+            walletModel.Balance += (float)(amout*percent); 
+
+            await Repos.WalletRepos.Update(walletModel);
+            if (fatherModel.Father2Id != 0)
+            {
+                switch(percent)
+                {
+                    case (float)0.1:
+                        percent = (float)0.5;
+                        AddRefBonus(fatherModel.Father1Id.Value, amout, percent);
+                        break;
+                    case (float)0.05:
+                        percent = (float)0.02;
+                        AddRefBonus(fatherModel.Father1Id.Value, amout, percent);
+                        break;
+                    case (float)0.02:
+                        percent = (float)0.01;
+                        AddRefBonus(fatherModel.Father1Id.Value, amout, percent);
+                        break;
+                    case (float)0.01:
+                        AddRefBonus(fatherModel.Father1Id.Value, amout, percent);
+                        break;
+                }
+            }
+        }
         
     }
 }

@@ -2,7 +2,7 @@ using tgBotOrderV11.TgBot.TgLogic.MachineState.User;
 
 namespace tgBotOrderV11.TgBot.TgLogic.Service;
 
-public interface ITransaction
+public interface ITopUpTransact
 {
-    public Task CreateTransaction<IOperation>(IOperation operation);
+    
 }

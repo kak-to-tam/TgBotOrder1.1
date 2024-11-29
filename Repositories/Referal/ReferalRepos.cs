@@ -15,7 +15,7 @@ public class ReferalRepos : IRepos<ReferalModel>
     {
         this.tgBotOrderContext = tgBotOrderContext;
     }
-    public async Task<ReferalModel?> CreateModel(long tgID, long? father1_id = null, long? father2_id = null, long? father3_id = null)
+    public async Task<ReferalModel?> CreateModel(long tgID, long? father1_id = 0, long? father2_id = 0, long? father3_id = 0)
     {
         ReferalModel referalModel = new ReferalModel(tgID, father1_id, father2_id, father3_id);
         return referalModel;

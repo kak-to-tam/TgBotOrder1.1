@@ -15,7 +15,7 @@ public class WalletModel : Abstract.IModel
     [Required]
     public string PrivateKey { get; private set; }
     [Required]
-    public float Balance { get; private set; }
+    public float Balance { get; set; }
     
     public WalletModel(long tgID, string address, string privateKey, float balance)
     {

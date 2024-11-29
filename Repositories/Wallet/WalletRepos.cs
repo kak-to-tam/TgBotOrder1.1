@@ -79,10 +79,33 @@ public class WalletRepos : IRepos<WalletModel>
             return null;
         }
         return null;
-        return walletModels;
     }
     public async Task<WalletModel?> Update(WalletModel walletModels)
     {
+        try 
+        {
+            WalletModel walletModelOld = await GetModel(walletModels.TgID);
+
+            if (walletModels.Balance != walletModelOld.Balance)
+            {
+                Wallet wallet = await tgBotOrderContext.Wallets.Where(needful => needful.UserId == walletModels.TgID).FirstAsync();
+                
+                wallet.Balance = walletModels.Balance;
+
+                tgBotOrderContext.SaveChanges();
+                
+                return walletModels;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+        return null; 
         return walletModels;
     }
 }
