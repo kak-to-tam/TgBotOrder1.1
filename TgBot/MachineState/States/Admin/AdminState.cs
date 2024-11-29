@@ -26,23 +26,23 @@ public class AdminState : IState
     }
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
-        int selcted = int.Parse(callbackQuery.Data);
-        switch(selcted)
+        Enum.TryParse(callbackQuery.Data, out Buttons selcted);
+        switch (selcted)
         {
-            case (int)Buttons.Back:
+            case Buttons.Back:
                 await stateController.SetNewState(new UserMenuState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
-            case (int)Buttons.DeniedTransferState:
+            case Buttons.DeniedTransferState:
                 await stateController.SetNewState(new TopUpBalanceState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
 
                 break;
-            case (int)Buttons.SetMinAmout:
+            case Buttons.SetMinAmout:
                 await stateController.SetNewState(new SetMinAmoutState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
-            case (int)Buttons.SetSupport:
+            case Buttons.SetSupport:
                 await stateController.SetNewState(new SetSupportTgState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;

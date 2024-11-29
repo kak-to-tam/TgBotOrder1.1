@@ -24,16 +24,16 @@ public class WithdrawalState : IState
     }
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
-        int selcted = int.Parse(callbackQuery.Data);
-        switch(selcted)
+        Enum.TryParse(callbackQuery.Data, out Buttons selcted);
+        switch (selcted)
         {
-            case (int)Buttons.Back:
+            case Buttons.Back:
 
                 stateController.SetNewState(new TransferState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
-            case (int)Buttons.TRC20:
-                stateController.SetNewState(new TopUpBalanceState(), callbackQuery.Message!.Chat.Id);
+            case Buttons.TRC20:
+                stateController.SetNewState(new WithdrawalAmoutState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
             break;
         }

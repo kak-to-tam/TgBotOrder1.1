@@ -14,8 +14,11 @@ x64/
 [Bb]in/
 [Oo]bj/
 
+#my files
+
 *.vs
 *.vscode
+*myenv
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

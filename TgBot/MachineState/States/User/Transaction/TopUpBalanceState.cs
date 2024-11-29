@@ -8,6 +8,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using tgBotOrderV11.Utils;
 using tgBotOrderV11.Repos;
+using static tgBotOrderV11.Utils.TronAccount;
 
 
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState.User;
@@ -36,11 +37,15 @@ public class TopUpBalanceState : IState
         WalletModel walletModel;
         
         walletModel = await stateController.Repos.WalletRepos.GetModel(msg.Chat.Id);
+
         if (walletModel == null)
         {
-            
-            //stateController.Repos.WalletRepos.CreateModel(msg.Chat.Id );
+            WalletInfo walletInfo = await TronAccount.Create();
+
+            walletModel = await stateController.Repos.WalletRepos.CreateModel(msg.Chat.Id, walletInfo.pubKey, walletInfo.privateKey);
+
+            await stateController.Repos.WalletRepos.Add(walletModel);
         }
-        await bot.SendMessage(msg.Chat, $"Вот кошелек для пополнения `{walletModel.Address}`", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+        await bot.SendMessage(msg.Chat, $"Вот адресс кошелька для пополнения `{walletModel.Address}` в течении 5 минут средства поступят на баланс", ParseMode.Markdown, replyMarkup: new ReplyKeyboardRemove());
     }
 }

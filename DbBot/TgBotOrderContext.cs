@@ -62,9 +62,7 @@ public partial class TgBotOrderContext : DbContext
 
             entity.HasIndex(e => e.UserId, "user_id").IsUnique();
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Father1Id).HasColumnName("father1_id");
             entity.Property(e => e.Father2Id).HasColumnName("father2_id");
             entity.Property(e => e.Father3Id).HasColumnName("father3_id");
@@ -96,16 +94,15 @@ public partial class TgBotOrderContext : DbContext
 
             entity.HasIndex(e => e.UserId, "FK_wallet_user");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.Adress)
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Address)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("''")
-                .HasColumnName("adress");
+                .HasColumnName("address");
             entity.Property(e => e.Balance).HasColumnName("balance");
             entity.Property(e => e.PrivateKey)
-                .HasMaxLength(50)
+                .HasMaxLength(150)
+                .HasDefaultValueSql("''")
                 .HasColumnName("private_key");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });

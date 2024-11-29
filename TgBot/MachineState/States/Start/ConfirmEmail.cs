@@ -19,6 +19,8 @@ public class ConfirmEmail : IState
     {
         NewEmail = 1,
         NewCode = 2,
+        AddReferal = 3,
+        NotAdd = 4,
     }
     public async Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot)
     {
@@ -31,8 +33,11 @@ public class ConfirmEmail : IState
             stateController.MemoryCache.Remove($"um:{msg.Chat.Id}");
             await stateController.Repos.UserRepos.Add(userModel);
             stateController.MemoryCache.Remove($"code:{msg.Chat.Id}");
-            await stateController.SetNewState(new UserMenuState(), msg.Chat.Id);
-            await stateController.CurrentState.Entry(stateController, msg, bot);
+            var inlineMarkup = new InlineKeyboardMarkup()
+            .AddNewRow()
+                .AddButton("Добавить реф", Convert.ToString(Buttons.AddReferal))
+                .AddButton("Не добавлять", Convert.ToString(Buttons.NotAdd));
+            await bot.SendMessage(msg.Chat, $"У вас есть реф код, активируйте его, после завершение регистрации этого сделать нельзя", ParseMode.Html, replyMarkup: inlineMarkup);
         }
         else
         {
@@ -45,19 +50,27 @@ public class ConfirmEmail : IState
     }
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
-        int selcted = int.Parse(callbackQuery.Data);
-        switch(selcted)
+        Enum.TryParse(callbackQuery.Data, out Buttons selcted);
+        switch (selcted)
         {
-            case (int)Buttons.NewEmail:
+            case Buttons.NewEmail:
                 stateController.MemoryCache.Remove($"um:{callbackQuery.Message!.Chat.Id}");
                 stateController.SetNewState(new EmailState(), callbackQuery.Message!.Chat.Id);
                 await bot.SendMessage(callbackQuery.Message!.Chat, $"Write new email", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
                 break;
-            case (int)Buttons.NewCode:
+            case Buttons.NewCode:
                 stateController.MemoryCache.Remove($"code:{callbackQuery.Message!.Chat.Id}");
                 string code = await CodeConfirm.GenerateCode();
                 stateController.MemoryCache.Set(callbackQuery.Message!.Chat.Id, code);
                 await bot.SendMessage(callbackQuery.Message!.Chat, $"We send new code on u email", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+                break;
+            case Buttons.AddReferal:
+                await stateController.SetNewState(new AddReferalLinkState(), callbackQuery.Message!.Chat.Id);
+                await stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
+                break;
+            case Buttons.NotAdd:
+                await stateController.SetNewState(new UserMenuState(), callbackQuery.Message!.Chat.Id);
+                await stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
         }
     }

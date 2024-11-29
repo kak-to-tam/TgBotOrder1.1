@@ -62,6 +62,7 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
             controller.MemoryCache.TryGetValue($"st:{msg.Chat.Id}", out IState? lastState);
             if (lastState != null)
             {
+                await bot.DeleteMessageAsync(msg.Chat.Id, msg.MessageId);
                 controller.SetNewState(lastState, msg.Chat.Id);
                 controller.CurrentState.MessHandler(controller, msg, bot);
             }
@@ -124,6 +125,7 @@ public class UpdateHandler(ITelegramBotClient bot, ILogger<UpdateHandler> logger
         controller.MemoryCache.TryGetValue($"st:{callbackQuery.Message!.Chat.Id}", out IState? lastState);
         if (lastState != null)
         {
+            await bot.DeleteMessageAsync(callbackQuery.Message!.Chat.Id, callbackQuery.Message!.MessageId);
             controller.CurrentState.InlineHandler(controller, callbackQuery, bot);
         }
         else

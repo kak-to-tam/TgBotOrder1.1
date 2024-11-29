@@ -3,6 +3,8 @@ using tgBotOrderV11.DbBot;
 using tgBotOrderV11.Repos;
 using tgBotOrderV11.Repos.Model;
 using tgBotOrderV11.Repos.Abstract;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace tgBotOrderV11.Repos;
 
@@ -25,12 +27,58 @@ public class ReferalRepos : IRepos<ReferalModel>
     }
     public async Task<ReferalModel?> GetModel(long tgID)
     {
-        ReferalModel referalModel = new ReferalModel(tgID);
-        return referalModel;
+        try
+        {
+            ReferalModel referalModel;
+
+            await tgBotOrderContext.Referals.LoadAsync();
+            
+            Referal referal = tgBotOrderContext.Referals.Where(needful => needful.UserId == tgID).First();
+
+            referalModel = new ReferalModel(referal.UserId, referal.Father1Id, referal.Father2Id, referal.Father3Id);    
+
+            var context = new ValidationContext(referalModel);
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(referalModel, context, results, true))
+            {
+                Console.WriteLine("Не удалось создать объект User");
+                foreach (var error in results)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+            else
+                return referalModel ;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+
+        return null;
+        
     }
     public async Task<ReferalModel?> Add(ReferalModel refModel)
     {
-        return refModel;
+        try
+        {
+            Referal referal = new Referal();
+            
+            referal.UserId = refModel.TgID;
+            referal.Father1Id = refModel.Father1Id;
+            referal.Father2Id = refModel.Father2Id;
+            referal.Father3Id = refModel.Father3Id;
+
+            tgBotOrderContext.Referals.Add(referal);
+            
+            await tgBotOrderContext.SaveChangesAsync();
+            return refModel;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+        return null;
     }
     public async Task<ReferalModel?> Update(ReferalModel refModel)
     {

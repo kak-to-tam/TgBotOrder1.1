@@ -23,11 +23,11 @@ public class OperationState : IState
     }
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
-        int selcted = int.Parse(callbackQuery.Data);
-        switch(selcted)
+        Enum.TryParse(callbackQuery.Data, out Buttons selcted);
+        switch (selcted)
         {
-            case (int)Buttons.Back:
-                stateController.SetNewState(new OperationState(), callbackQuery.Message!.Chat.Id);
+            case Buttons.Back:
+                stateController.SetNewState(new UserMenuState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
         }

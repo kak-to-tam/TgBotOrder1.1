@@ -16,7 +16,6 @@ public class ReferalState : IState
     enum Buttons 
     {
         Back = 1,
-        AddReferal = 2
     }
     public async Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot)
     {
@@ -29,10 +28,6 @@ public class ReferalState : IState
         {
             case (int)Buttons.Back:
                 stateController.SetNewState(new UserMenuState(), callbackQuery.Message!.Chat.Id);
-                stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
-                break;
-            case (int)Buttons.AddReferal:
-                stateController.SetNewState(new AddReferalState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
         }
@@ -53,8 +48,6 @@ public class ReferalState : IState
 
 
         var inlineMarkup = new InlineKeyboardMarkup()
-            .AddNewRow()
-                .AddButton("Приглосительная ссылка", Convert.ToString(Buttons.AddReferal))
             .AddNewRow()
                 .AddButton("Назад", Convert.ToString(Buttons.Back));
 

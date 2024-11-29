@@ -13,12 +13,15 @@ public class WalletModel : Abstract.IModel
     [Required]
     public string Address { get; private set; }
     [Required]
+    public string PrivateKey { get; private set; }
+    [Required]
     public float Balance { get; private set; }
     
-    public WalletModel(long tgID, string address, float balance)
+    public WalletModel(long tgID, string address, string privateKey, float balance)
     {
         TgID = tgID;
         Address = address;
+        PrivateKey = privateKey;
         Balance = balance;
     } 
 }

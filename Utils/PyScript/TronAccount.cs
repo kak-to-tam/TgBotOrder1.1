@@ -9,21 +9,21 @@ public class TronAccount
     public class WalletInfo
     {
         public string pubKey;
-        public string secretKey;
+        public string privateKey;
         public WalletInfo(string info)
         {
             var tmp = info.Split("|");
             pubKey = tmp[0];
-            secretKey = tmp[1];
+            privateKey = tmp[1];
         }
     }
-    public static WalletInfo? Create()
+    public static async Task<WalletInfo?> Create()
     {
         try
         {
             WalletInfo? walletInfo = null; 
             // Получение относительного пути к скрипту Python
-            string pythonScriptPath = FindPythonScript("PythonApplication", "CreateAccount.py");
+            string pythonScriptPath = FindPythonScript("", "CreateAccount.py");
 
             // Проверка наличия скрипта Python
             if (string.IsNullOrEmpty(pythonScriptPath) || !File.Exists(pythonScriptPath))
@@ -33,7 +33,7 @@ public class TronAccount
             }
 
             // Путь к интерпретатору Python в виртуальном окружении
-            string pythonInterpreterPath = FindPythonInterpreter("PythonApplication", "myenv", "Scripts", "python.exe");
+            string pythonInterpreterPath = FindPythonInterpreter("", "myenv", "Scripts", "python.exe");
 
             // Проверка наличия интерпретатора Python
             if (string.IsNullOrEmpty(pythonInterpreterPath) || !File.Exists(pythonInterpreterPath))
