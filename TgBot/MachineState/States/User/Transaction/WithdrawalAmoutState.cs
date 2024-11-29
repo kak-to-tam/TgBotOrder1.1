@@ -11,7 +11,7 @@ using tgBotOrderV11.Utils;
 
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState.User;
 
-public class UserMenuState : IState
+public class WithdrawalAmoutState : IState
 {
     
     public async Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot)
@@ -20,7 +20,7 @@ public class UserMenuState : IState
     }
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
-       
+        
     }
     public async Task Exit(StateController stateController, Message msg, ITelegramBotClient bot, IState nextState)
     {
@@ -32,6 +32,7 @@ public class UserMenuState : IState
     }
     public async Task Entry(StateController stateController, Message msg, ITelegramBotClient bot)
     {
-        await bot.SendMessage(msg.Chat, $"hello from user menu", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+        stateController.MemoryCache.TryGetValue("minAmout", out string? value);
+        await bot.SendMessage(msg.Chat, $"Введите сумму для вывовода, минимальная ровна {value}", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
     }
 }

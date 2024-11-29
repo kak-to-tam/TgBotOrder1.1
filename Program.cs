@@ -25,14 +25,14 @@ IHost host = Host.CreateDefaultBuilder(args)
                 {
                     BotConfiguration? botConfiguration = sp.GetService<IOptions<BotConfiguration>>()?.Value;
                     ArgumentNullException.ThrowIfNull(botConfiguration);
-                    TelegramBotClientOptions options = new(botConfiguration.BotToken)
+                    TelegramBotClientOptions options = new(botConfiguration.BotToken);
 
                     return new TelegramBotClient(options, httpClient);
                 });
         services.AddDbContext<TgBotOrderContext>();
         services.AddMemoryCache();
         services.AddScoped<UpdateHandler>();
-        services.AddScoped<BlacklistRepos>();
+        services.AddScoped<OperationsRepos>();
         services.AddScoped<WalletRepos>();
         services.AddScoped<UserRepos>();
         services.AddScoped<ReferalRepos>();

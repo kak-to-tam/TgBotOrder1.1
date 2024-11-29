@@ -1,4 +1,6 @@
 
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using tgBotOrderV11.DbBot;
 using tgBotOrderV11.Repos;
 using tgBotOrderV11.Repos;
@@ -13,7 +15,7 @@ public class WalletRepos : IRepos<WalletModel>
     {
         this.tgBotOrderContext = tgBotOrderContext;
     }
-    public async Task<WalletModel?> CreateModel(long tgID, string address, float balance)
+    public async Task<WalletModel?> CreateModel(long tgID, string address, float balance = 0)
     {
         WalletModel walletModel = new WalletModel(tgID, address, balance);
         return walletModel;
@@ -25,8 +27,35 @@ public class WalletRepos : IRepos<WalletModel>
     }
     public async Task<WalletModel?> GetModel(long tgID)
     {
-        WalletModel walletModel = new WalletModel(tgID, "", 0);
-        return walletModel;
+        try
+        {
+            WalletModel walletModel;
+
+            await tgBotOrderContext.Wallets.LoadAsync();
+            
+            Wallet wallet = tgBotOrderContext.Wallets.Where(needful => needful.UserId == tgID).First();
+
+            walletModel = new WalletModel(wallet.UserId, wallet.Adress, wallet.Balance);    
+
+            var context = new ValidationContext(walletModel);
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(walletModel, context, results, true))
+            {
+                Console.WriteLine("Не удалось создать объект User");
+                foreach (var error in results)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+            else
+                return walletModel;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+
+        return null;
     }
     public async Task<WalletModel?> Add(WalletModel walletModels)
     {

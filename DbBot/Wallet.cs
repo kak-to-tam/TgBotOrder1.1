@@ -12,4 +12,6 @@ public partial class Wallet
     public float Balance { get; set; }
 
     public long UserId { get; set; }
+
+    public string? PrivateKey { get; set; }
 }

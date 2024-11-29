@@ -6,14 +6,16 @@ using tgBotOrderV11.Repos.Abstract;
 
 namespace tgBotOrderV11.Repos.Model;
 
-public class BlacklistModel : Abstract.IModel
+public class OperationsModel : Abstract.IModel
 {
     [Required]
     public long TgID { get; private set; }
-    
-    public BlacklistModel(long tgID)
+    public float? From { get; private set; } 
+    public float? To { get; private set; } 
+    public OperationsModel(long tgID, float? from = null, float? to = null)
     {
         TgID = tgID;
-        
+        From = from;
+        To = to;
     } 
 }

@@ -15,7 +15,11 @@ namespace tgBotOrderV11.TgBot.TgLogic.MachineState.Start;
 
 public class ConfirmEmail : IState
 {
-    
+    enum Buttons 
+    {
+        NewEmail = 1,
+        NewCode = 2,
+    }
     public async Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot)
     {
 
@@ -34,21 +38,22 @@ public class ConfirmEmail : IState
         {
             var inlineMarkup = new InlineKeyboardMarkup()
             .AddNewRow()
-                .AddButton("new code", "nEmail")
-                .AddButton("new email", "nCode");
+                .AddButton("new code", Convert.ToString(Buttons.NewCode))
+                .AddButton("new email", Convert.ToString(Buttons.NewEmail));
             await bot.SendMessage(msg.Chat, $"non corect code {msg.Chat.FirstName} your input {msg.Text}", ParseMode.Html, replyMarkup: inlineMarkup);
         }
     }
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
-        switch(callbackQuery.Data)
+        int selcted = int.Parse(callbackQuery.Data);
+        switch(selcted)
         {
-            case "nEmail":
+            case (int)Buttons.NewEmail:
                 stateController.MemoryCache.Remove($"um:{callbackQuery.Message!.Chat.Id}");
                 stateController.SetNewState(new EmailState(), callbackQuery.Message!.Chat.Id);
                 await bot.SendMessage(callbackQuery.Message!.Chat, $"Write new email", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
                 break;
-            case "nCode":
+            case (int)Buttons.NewCode:
                 stateController.MemoryCache.Remove($"code:{callbackQuery.Message!.Chat.Id}");
                 string code = await CodeConfirm.GenerateCode();
                 stateController.MemoryCache.Set(callbackQuery.Message!.Chat.Id, code);

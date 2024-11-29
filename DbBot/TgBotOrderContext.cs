@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
-using tgBotOrder_v1._1.DbBot;
 
 namespace tgBotOrderV11.DbBot;
 
@@ -17,7 +16,7 @@ public partial class TgBotOrderContext : DbContext
     {
     }
 
-    public virtual DbSet<Blacklist> Blacklists { get; set; }
+    public virtual DbSet<Operation> Operations { get; set; }
 
     public virtual DbSet<Referal> Referals { get; set; }
 
@@ -35,15 +34,17 @@ public partial class TgBotOrderContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<Blacklist>(entity =>
+        modelBuilder.Entity<Operation>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("blacklist");
+            entity.ToTable("operations");
 
             entity.HasIndex(e => e.UserId, "FK_blacklist_user");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.From).HasColumnName("from");
+            entity.Property(e => e.To).HasColumnName("to");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 
@@ -103,6 +104,9 @@ public partial class TgBotOrderContext : DbContext
                 .HasDefaultValueSql("''")
                 .HasColumnName("adress");
             entity.Property(e => e.Balance).HasColumnName("balance");
+            entity.Property(e => e.PrivateKey)
+                .HasMaxLength(50)
+                .HasColumnName("private_key");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 
