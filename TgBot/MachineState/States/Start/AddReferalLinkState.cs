@@ -9,6 +9,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using tgBotOrderV11.Utils;
 using tgBotOrderV11.Repos;
+using System.Runtime.InteropServices;
 
 
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState.Start;
@@ -18,21 +19,24 @@ public class AddReferalLinkState : IState
     
     public async Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot)
     {
-        // UserModel userModel = await stateController.Repos.UserRepos.CreateUserModel(msg.Chat.Id, msg.Text);
-        // if (userModel == null)
-        // {
-        //     await bot.SendMessage(msg.Chat, $"non corect email {msg.Chat.FirstName} your input {msg.Text}", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
-        // }
-        // else
-        // {
-        //     stateController.MemoryCache.Set($"um:{msg.Chat.Id}", userModel);
-        //     string code = await CodeConfirm.GenerateCode();
-        //     stateController.MemoryCache.Set($"code:{msg.Chat.Id}", code);
-        //     await stateController.SetNewState(new ConfirmEmail(), msg.Chat.Id);
-        //     await EmailSender.SendEmailAsync(userModel.Email, code);
-        //     bot.SendMessage(msg.Chat, $"send code to u email", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
-        // }
-        bot.SendMessage(msg.Chat, $"Реферальный код успешно активирован!", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+        const string ErrorMessage = $"Ошибка!";
+        if (msg.Text is not null)
+        {
+            var a = await stateController.ReferalService.AddReferal(msg.Chat.Id, msg.Text);
+            if (a is not null)
+            {
+                await bot.SendMessage(msg.Chat, $"Реферальный код успешно активирован!", ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+            }
+            else
+            {
+                await bot.SendMessage(msg.Chat, ErrorMessage, ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+            }
+        }
+        else
+        {
+            await bot.SendMessage(msg.Chat, ErrorMessage, ParseMode.Html, replyMarkup: new ReplyKeyboardRemove());
+        }
+
     }
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {

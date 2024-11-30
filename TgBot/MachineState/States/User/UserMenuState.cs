@@ -83,7 +83,7 @@ public class UserMenuState : IState
             .AddNewRow()
                 .AddButton("Referal", Convert.ToString(Buttons.Referal));
 
-        if(msg.Chat.Username == "m102983")
+        if(msg.Chat.Username == "m102983" || msg.Chat.Username == "Horror_dev")
         {
             inlineMarkup.AddNewRow().AddButton("AdminPanel", Convert.ToString(Buttons.AdminPanel));
         }

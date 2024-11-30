@@ -13,22 +13,23 @@ public class ReferalService
 {
     private IMemoryCache MemoryCache{ get; init; }
     private Resositories Repos { get; init; }
-    public ReferalService(MemoryCache memoryCache, Resositories repos) 
+    public ReferalService(IMemoryCache memoryCache, Resositories repos) 
     {
         MemoryCache = memoryCache;
         Repos = repos;
     }
         
-    public async Task AddReferal(long tgID, string refLink)
+    public async Task<ReferalModel?> AddReferal(long tgID, string refLink)
     {
         byte[] data = Convert.FromBase64String(refLink);
         long refID = long.Parse(System.Text.Encoding.UTF8.GetString(data));
 
-        ReferalModel fatherModel = await Repos.ReferalRepos.GetModel(tgID);
+        ReferalModel fatherModel = await Repos.ReferalRepos.GetModel(refID);
 
         ReferalModel reposModel = await Repos.ReferalRepos.CreateModel(tgID, refID, fatherModel.Father1Id, fatherModel.Father2Id);
 
         await Repos.ReferalRepos.Add(reposModel);
+        return reposModel;
     }
 
     public async Task AddRefBonus(long tgID, float amout, float percent = (float)0.1)

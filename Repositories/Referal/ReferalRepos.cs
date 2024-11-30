@@ -32,8 +32,16 @@ public class ReferalRepos : IRepos<ReferalModel>
             ReferalModel referalModel;
 
             await tgBotOrderContext.Referals.LoadAsync();
-            
-            Referal referal = tgBotOrderContext.Referals.Where(needful => needful.UserId == tgID).First();
+
+            List<Referal> referals = tgBotOrderContext.Referals.Where(needful => needful.UserId == tgID).ToList();
+            Referal referal = null;
+
+            if (referals.Count > 0)
+            {
+                referal = referals.First();
+
+            }
+            else return null;
 
             referalModel = new ReferalModel(referal.UserId, referal.Father1Id, referal.Father2Id, referal.Father3Id);    
 

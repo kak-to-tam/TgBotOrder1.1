@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using tgBotOrderV11.Resos;
 using tgBotOrderV11.TgBot.TgLogic.MachineState;
 using tgBotOrderV11;
+using tgBotOrderV11.TgBot.TgLogic.Service.Referal;
 
 
 
@@ -20,6 +21,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         // Register Bot configuration
         services.Configure<BotConfiguration>(context.Configuration.GetSection("BotConfiguration"));
+        services.AddMemoryCache();
         services.AddHttpClient("telegram_bot_client").RemoveAllLoggers()
                 .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
                 {
@@ -30,17 +32,20 @@ IHost host = Host.CreateDefaultBuilder(args)
                     return new TelegramBotClient(options, httpClient);
                 });
         services.AddDbContext<TgBotOrderContext>();
-        services.AddMemoryCache();
         services.AddScoped<UpdateHandler>();
         services.AddScoped<OperationsRepos>();
         services.AddScoped<WalletRepos>();
         services.AddScoped<UserRepos>();
         services.AddScoped<ReferalRepos>();
         services.AddScoped<Resositories>();
+        services.AddScoped<ReferalService>();
         services.AddScoped<StateController>();
         services.AddScoped<ReceiverService>();
         services.AddHostedService<PollingService>();
     })
     .Build();
+
+IMemoryCache cache =
+    host.Services.GetRequiredService<IMemoryCache>();
 
 await host.RunAsync();

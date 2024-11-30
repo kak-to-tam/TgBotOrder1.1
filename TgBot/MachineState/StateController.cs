@@ -15,7 +15,7 @@ public class StateController
     public Resositories Repos { get; private set; }
     public ReferalService ReferalService { get; private set; }
     public IState CurrentState { get; private set; }
-    public StateController( IMemoryCache cache, Resositories resositories, ReferalService referalService )
+    public StateController(IMemoryCache cache, Resositories resositories, ReferalService referalService)
     {
         MemoryCache = cache;
         Repos = resositories;
