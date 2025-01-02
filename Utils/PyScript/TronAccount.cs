@@ -17,13 +17,12 @@ public class TronAccount
             privateKey = tmp[1];
         }
     }
-    public static async Task<WalletInfo?> Create()
+    public static async Task<string?> BalanceTRX(string address)
     {
         try
         {
-            WalletInfo? walletInfo = null; 
             // Получение относительного пути к скрипту Python
-            string pythonScriptPath = FindPythonScript("", "CreateAccount.py");
+            string pythonScriptPath = FindPythonScript("", "CrpSystem.py");
 
             // Проверка наличия скрипта Python
             if (string.IsNullOrEmpty(pythonScriptPath) || !File.Exists(pythonScriptPath))
@@ -44,7 +43,179 @@ public class TronAccount
 
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = pythonInterpreterPath;
-            start.Arguments = $"{pythonScriptPath}";
+            start.Arguments = $"{pythonScriptPath} 4 {address}";
+            start.WorkingDirectory = Path.GetDirectoryName(pythonScriptPath);
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            start.RedirectStandardError = true; // Захват стандартного вывода ошибок
+            start.CreateNoWindow = true;
+
+            using (Process process = Process.Start(start))
+            {
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    string result = reader.ReadToEnd();
+                    
+                    
+                }
+
+                process.WaitForExit();
+                int exitCode = process.ExitCode;
+                Console.WriteLine($"Процесс завершился с кодом: {exitCode}");
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Исключение: {ex.Message}");
+            Console.WriteLine($"Стек вызовов: {ex.StackTrace}");
+        }
+        return null;
+    }
+    public static async Task<bool?> TransactionUSDT(WalletInfo from, string to, string amount)
+    {
+        try
+        {
+            // Получение относительного пути к скрипту Python
+            string pythonScriptPath = FindPythonScript("", "CrpSystem.py");
+
+            // Проверка наличия скрипта Python
+            if (string.IsNullOrEmpty(pythonScriptPath) || !File.Exists(pythonScriptPath))
+            {
+                Console.WriteLine($"Ошибка: скрипт Python не найден по пути: {pythonScriptPath}");
+                return null;
+            }
+
+            // Путь к интерпретатору Python в виртуальном окружении
+            string pythonInterpreterPath = FindPythonInterpreter("", "myenv", "Scripts", "python.exe");
+
+            // Проверка наличия интерпретатора Python
+            if (string.IsNullOrEmpty(pythonInterpreterPath) || !File.Exists(pythonInterpreterPath))
+            {
+                Console.WriteLine($"Ошибка: интерпретатор Python не найден по пути: {pythonInterpreterPath}");
+                return null;
+            }
+
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = pythonInterpreterPath;
+            start.Arguments = $"{pythonScriptPath} 3 {from.pubKey} {from.privateKey} {to} {amount}";
+            start.WorkingDirectory = Path.GetDirectoryName(pythonScriptPath);
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            start.RedirectStandardError = true; // Захват стандартного вывода ошибок
+            start.CreateNoWindow = true;
+
+            using (Process process = Process.Start(start))
+            {
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    string result = reader.ReadToEnd();
+                    
+                    if (result == "SUCCESS")
+                    {
+                        return true;
+                    }
+                }
+
+                process.WaitForExit();
+                int exitCode = process.ExitCode;
+                Console.WriteLine($"Процесс завершился с кодом: {exitCode}");
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Исключение: {ex.Message}");
+            Console.WriteLine($"Стек вызовов: {ex.StackTrace}");
+        }
+        return null;
+    }
+    public static async Task<bool?> TransactionTRX(WalletInfo from, string to, string amount)
+    {
+        try
+        {
+            // Получение относительного пути к скрипту Python
+            string pythonScriptPath = FindPythonScript("", "CrpSystem.py");
+
+            // Проверка наличия скрипта Python
+            if (string.IsNullOrEmpty(pythonScriptPath) || !File.Exists(pythonScriptPath))
+            {
+                Console.WriteLine($"Ошибка: скрипт Python не найден по пути: {pythonScriptPath}");
+                return null;
+            }
+
+            // Путь к интерпретатору Python в виртуальном окружении
+            string pythonInterpreterPath = FindPythonInterpreter("", "myenv", "Scripts", "python.exe");
+
+            // Проверка наличия интерпретатора Python
+            if (string.IsNullOrEmpty(pythonInterpreterPath) || !File.Exists(pythonInterpreterPath))
+            {
+                Console.WriteLine($"Ошибка: интерпретатор Python не найден по пути: {pythonInterpreterPath}");
+                return null;
+            }
+
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = pythonInterpreterPath;
+            start.Arguments = $"{pythonScriptPath} 2 {from.pubKey} {from.privateKey} {to} {amount}";
+            start.WorkingDirectory = Path.GetDirectoryName(pythonScriptPath);
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            start.RedirectStandardError = true; // Захват стандартного вывода ошибок
+            start.CreateNoWindow = true;
+
+            using (Process process = Process.Start(start))
+            {
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    string result = reader.ReadToEnd();
+                    
+                    if (result == "SUCCESS")
+                    {
+                        return true;
+                    }
+                }
+
+                process.WaitForExit();
+                int exitCode = process.ExitCode;
+                Console.WriteLine($"Процесс завершился с кодом: {exitCode}");
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Исключение: {ex.Message}");
+            Console.WriteLine($"Стек вызовов: {ex.StackTrace}");
+        }
+        return null;
+    }
+    public static async Task<WalletInfo?> Create()
+    {
+        try
+        {
+            WalletInfo? walletInfo = null; 
+            // Получение относительного пути к скрипту Python
+            string pythonScriptPath = FindPythonScript("", "CrpSystem.py");
+
+            // Проверка наличия скрипта Python
+            if (string.IsNullOrEmpty(pythonScriptPath) || !File.Exists(pythonScriptPath))
+            {
+                Console.WriteLine($"Ошибка: скрипт Python не найден по пути: {pythonScriptPath}");
+                return null;
+            }
+
+            // Путь к интерпретатору Python в виртуальном окружении
+            string pythonInterpreterPath = FindPythonInterpreter("", "myenv", "Scripts", "python.exe");
+
+            // Проверка наличия интерпретатора Python
+            if (string.IsNullOrEmpty(pythonInterpreterPath) || !File.Exists(pythonInterpreterPath))
+            {
+                Console.WriteLine($"Ошибка: интерпретатор Python не найден по пути: {pythonInterpreterPath}");
+                return null;
+            }
+
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = pythonInterpreterPath;
+            start.Arguments = $"{pythonScriptPath} 1";
             start.WorkingDirectory = Path.GetDirectoryName(pythonScriptPath);
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
