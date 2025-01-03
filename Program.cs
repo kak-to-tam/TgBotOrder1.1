@@ -15,8 +15,6 @@ using tgBotOrderV11;
 using tgBotOrderV11.TgBot.TgLogic.Service.Referal;
 
 
-
-
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {

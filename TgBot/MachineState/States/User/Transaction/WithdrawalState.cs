@@ -16,7 +16,7 @@ public class WithdrawalState : IState
     enum Buttons 
     {
         Back = 1,
-        TRC20 = 2,
+        TON = 2,
     }
     public async Task MessHandler(StateController stateController, Message msg, ITelegramBotClient bot)
     {
@@ -32,7 +32,7 @@ public class WithdrawalState : IState
                 stateController.SetNewState(new TransferState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
-            case Buttons.TRC20:
+            case Buttons.TON:
                 stateController.SetNewState(new WithdrawalAmoutState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
             break;
@@ -50,7 +50,7 @@ public class WithdrawalState : IState
     {
         var inlineMarkup = new InlineKeyboardMarkup()
             .AddNewRow()
-                .AddButton("TRC20", Convert.ToString(Buttons.TRC20))
+                .AddButton("TON", Convert.ToString(Buttons.TON))
             .AddNewRow()
                 .AddButton("Back", Convert.ToString(Buttons.Back));
         

@@ -35,17 +35,20 @@ public class TopUpBalanceState : IState
     public async Task Entry(StateController stateController, Message msg, ITelegramBotClient bot)
     {
         WalletModel walletModel;
-        
-        walletModel = await stateController.Repos.WalletRepos.GetModel(msg.Chat.Id);
 
+        /*
+            TO DO:
+         */
+        walletModel = await stateController.Repos.WalletRepos.GetModel(msg.Chat.Id);
         if (walletModel == null)
         {
             WalletInfo walletInfo = await TronAccount.Create();
+            //WalletInfo walletInfo = new WalletInfo(""");
 
             walletModel = await stateController.Repos.WalletRepos.CreateModel(msg.Chat.Id, walletInfo.pubKey, walletInfo.privateKey);
 
             await stateController.Repos.WalletRepos.Add(walletModel);
         }
-        await bot.SendMessage(msg.Chat, $"Вот адресс кошелька для пополнения `{walletModel.Address}` в течении 5 минут средства поступят на баланс", ParseMode.Markdown, replyMarkup: new ReplyKeyboardRemove());
+        await bot.SendMessage(msg.Chat, $"Вот адресс кошелька для пополнения уакажите его при переводе в сообщение`{walletModel.Address}` в течении 5 минут средства поступят на баланс", ParseMode.Markdown, replyMarkup: new ReplyKeyboardRemove());
     }
 }

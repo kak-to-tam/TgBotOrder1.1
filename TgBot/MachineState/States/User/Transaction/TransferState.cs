@@ -8,7 +8,6 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using tgBotOrderV11.Utils;
 
-
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState.User;
 
 public class TransferState : IState

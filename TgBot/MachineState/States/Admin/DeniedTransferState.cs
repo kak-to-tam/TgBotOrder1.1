@@ -23,6 +23,7 @@ public class DeniedTransferState : IState
     {
         
     }
+
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
         Enum.TryParse(callbackQuery.Data, out Buttons selcted);
@@ -33,9 +34,8 @@ public class DeniedTransferState : IState
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
             case Buttons.DeniedTransferState:
-                await stateController.SetNewState(new TopUpBalanceState(), callbackQuery.Message!.Chat.Id);
+                await stateController.SetNewState(new DeniedTransferStateRequestView(0), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
-
                 break;
             case Buttons.SetMinAmout:
 
@@ -54,13 +54,24 @@ public class DeniedTransferState : IState
     }
     public async Task Entry(StateController stateController, Message msg, ITelegramBotClient bot)
     {
+        Repos.OperationsRepos res =  stateController.Repos.OperationsRepos;
+        var models = await res.GetAllModel();
+
         var inlineMarkup = new InlineKeyboardMarkup()
-            .AddNewRow()
-                .AddButton("Заявки на снятие", Convert.ToString(Buttons.DeniedTransferState))
-                .AddButton("Минимальная сумма снятие", Convert.ToString(Buttons.SetMinAmout))
-            .AddNewRow()
-                .AddButton("Назад", Convert.ToString(Buttons.Back));
-        
-        await bot.SendMessage(msg.Chat, $"Oper menu", ParseMode.Html, replyMarkup: inlineMarkup);
+                   .AddNewRow()
+                       .AddButton("открыть заявки", Convert.ToString(Buttons.DeniedTransferState))
+                       .AddButton("Минимальная сумма снятие", Convert.ToString(Buttons.SetMinAmout))
+                   .AddNewRow()
+                       .AddButton("Назад", Convert.ToString(Buttons.Back));
+
+        await bot.SendMessage(msg.Chat, $"Всего заявок {models.Count}", ParseMode.Html, replyMarkup: inlineMarkup);
+        /*        var inlineMarkup = new InlineKeyboardMarkup()
+                    .AddNewRow()
+                        .AddButton("Заявки на снятие", Convert.ToString(Buttons.DeniedTransferState))
+                        .AddButton("Минимальная сумма снятие", Convert.ToString(Buttons.SetMinAmout))
+                    .AddNewRow()
+                        .AddButton("Назад", Convert.ToString(Buttons.Back));
+
+                await bot.SendMessage(msg.Chat, $"Oper menu", ParseMode.Html, replyMarkup: inlineMarkup);*/
     }
 }

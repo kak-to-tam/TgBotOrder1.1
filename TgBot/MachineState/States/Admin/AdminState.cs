@@ -34,7 +34,8 @@ public class AdminState : IState
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
                 break;
             case Buttons.DeniedTransferState:
-                await stateController.SetNewState(new TopUpBalanceState(), callbackQuery.Message!.Chat.Id);
+                // i change it here from TopUpBalanceState to DeniedTransferState
+                await stateController.SetNewState(new DeniedTransferState(), callbackQuery.Message!.Chat.Id);
                 stateController.CurrentState.Entry(stateController, callbackQuery.Message!, bot);
 
                 break;
