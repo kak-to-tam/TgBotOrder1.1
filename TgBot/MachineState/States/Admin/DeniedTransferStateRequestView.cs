@@ -9,6 +9,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 using tgBotOrderV11.Utils;
 using tgBotOrderV11.DbBot;
 using System.Diagnostics.Eventing.Reader;
+using tgBotOrderV11.TgBot.TgLogic.Service;
 
 
 namespace tgBotOrderV11.TgBot.TgLogic.MachineState.User;
@@ -39,6 +40,10 @@ public class DeniedTransferStateRequestView : IState
 
     public async Task InlineHandler(StateController stateController, CallbackQuery callbackQuery,  ITelegramBotClient bot)
     {
+        Repos.OperationsRepos res = stateController.Repos.OperationsRepos;
+        var models = await res.GetAllModel();
+        if (models == null) return;
+        var op = models[id];
         Enum.TryParse(callbackQuery.Data, out Buttons selcted);
         switch (selcted)
         {
@@ -60,11 +65,21 @@ public class DeniedTransferStateRequestView : IState
                 /*
                  * TO DO: accept code
                  */
+                switch (op.OpT)
+                {
+                    case 1:
+                        //op.OpT = -1;
+                        TransactionSystem.instance.WithDrawTon(op.Amount, op.To, "requested withdraw from MAVRO");
+                        break;
+                }
+
                 break;
             case Buttons.DeclineWithdraw:
+
                 /*
                  * TO DO: decline code
                  */
+                // TO DO: create remove Methonr stateController.Repos.OperationsRepos.Remove(op)
                 break;
             case Buttons.Back:
                 await stateController.SetNewState(new UserMenuState(), callbackQuery.Message!.Chat.Id);
@@ -102,7 +117,7 @@ public class DeniedTransferStateRequestView : IState
                    .AddNewRow()
                        .AddButton("Назад", Convert.ToString(Buttons.Back));
 
-        await bot.SendMessage(msg.Chat, $"завка N{id}, {op.TgID}, {op.From}, {op.To}", ParseMode.Html, replyMarkup: inlineMarkup);
+        await bot.SendMessage(msg.Chat, $"завка N{id}, {op.TgID}, {op.OpT}, {op.To}", ParseMode.Html, replyMarkup: inlineMarkup);
         /*        var inlineMarkup = new InlineKeyboardMarkup()
                     .AddNewRow()
                         .AddButton("Заявки на снятие", Convert.ToString(Buttons.DeniedTransferState))

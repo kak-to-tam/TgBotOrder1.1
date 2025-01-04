@@ -33,7 +33,7 @@ public class WithdrawalAmoutState : IState
                  TO DO: send with draw request to admin
                  */
 
-                stateController.Repos.OperationsRepos.CreateModel(msg.From.Id, 0.0, parts[0]);
+                stateController.Repos.OperationsRepos.CreateModel(msg.From.Id, 1, parts[0]);
             }
 
         }

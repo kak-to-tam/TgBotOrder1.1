@@ -14,9 +14,9 @@ public class OperationsRepos : IRepos<OperationsModel>
     {
         this.tgBotOrderContext = tgBotOrderContext;
     }
-    public async Task<OperationsModel?> CreateModel(long tgID, float from, float to)
+    public async Task<OperationsModel?> CreateModel(long tgID, int OpT, string? to = null)
     {
-        OperationsModel blacklistModels = new OperationsModel(tgID, from, to);
+        OperationsModel blacklistModels = new OperationsModel(tgID, OpT, to);
         return blacklistModels;
     }
     public async Task<List<OperationsModel>?> GetAllModel()

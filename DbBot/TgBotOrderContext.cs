@@ -43,7 +43,7 @@ public partial class TgBotOrderContext : DbContext
             entity.HasIndex(e => e.UserId, "FK_blacklist_user");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.From).HasColumnName("from");
+            entity.Property(e => e.OpT).HasColumnName("Type");
             entity.Property(e => e.To).HasColumnName("to");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });

@@ -10,12 +10,13 @@ public class OperationsModel : Abstract.IModel
 {
     [Required]
     public long TgID { get; private set; }
-    public float? From { get; private set; } 
-    public float? To { get; private set; } 
-    public OperationsModel(long tgID, float? from = null, float? to = null)
+    public int? OpT { get; private set; }
+    public decimal Amount { get; private set; }
+    public string? To { get; private set; } 
+    public OperationsModel(long tgID, decimal Amount, int? OpT = null, string? to = null)
     {
         TgID = tgID;
-        From = from;
+        this.OpT = OpT;
         To = to;
     } 
 }

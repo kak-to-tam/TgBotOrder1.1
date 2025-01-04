@@ -8,8 +8,11 @@ public partial class Operation
     public int Id { get; set; }
 
     public long UserId { get; set; }
+    public long TgId{ get; set; }
 
-    public float? From { get; set; }
+    public decimal Amount { get; set; }
 
-    public float? To { get; set; }
+    public int OpT { get; set; }
+
+    public string To { get; set; }
 }
