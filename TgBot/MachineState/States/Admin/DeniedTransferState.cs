@@ -56,6 +56,7 @@ public class DeniedTransferState : IState
     {
         Repos.OperationsRepos res =  stateController.Repos.OperationsRepos;
         var models = await res.GetAllModel();
+        models = models.FindAll(op => op.OpT != -1);
 
         var inlineMarkup = new InlineKeyboardMarkup()
                    .AddNewRow()

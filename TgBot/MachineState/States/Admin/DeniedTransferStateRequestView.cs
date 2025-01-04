@@ -43,6 +43,7 @@ public class DeniedTransferStateRequestView : IState
         Repos.OperationsRepos res = stateController.Repos.OperationsRepos;
         var models = await res.GetAllModel();
         if (models == null) return;
+        models = models.FindAll(op => op.OpT != -1);
         var op = models[id];
         Enum.TryParse(callbackQuery.Data, out Buttons selcted);
         switch (selcted)
@@ -105,6 +106,7 @@ public class DeniedTransferStateRequestView : IState
         Repos.OperationsRepos res =  stateController.Repos.OperationsRepos;
         var models = await res.GetAllModel();
         if (models == null) return;
+        models = models.FindAll(op => op.OpT != -1);
         var  op = models[id];
 
         var inlineMarkup = new InlineKeyboardMarkup()
